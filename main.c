@@ -4,6 +4,9 @@
 
 
 
+void scegli_id(int, int, int, ProfiloGiocatore *, Elenco *, int *);
+
+
 
 
 int main() {
@@ -83,27 +86,38 @@ int main() {
 
             if(risposta) {
                 printf("\nBene, quale id vuoi assegnare a %s?\n", profili[0].nome);
-
                 risposta = get_int("Risposta: ", 0, numero_giocatori - 1);
-
                 giocatori[risposta].p = &profili[0];
                 profili[0].id = risposta;
             }
 
         } else {
             printf("\nQuanti dei %d profili a disposizione vuoi usare?\n", numero_profili);
-            risposta = get_int("Risposta: ", 0, numero_profili);
+
+            if(numero_profili <= numero_giocatori) {
+                risposta = get_int("Risposta: ", 0, numero_profili);
+            } else {
+                risposta = get_int("Risposta: ", 0, numero_giocatori);
+            }
 
             // prcedi in base al numero di profili scelti
-        }
+            int *prov = (int *) calloc(numero_profili, sizeof(int));
+            for(int i = 0; i < numero_profili; i++) {
+                prov[i] = i;
+            }
 
-        // dai gli id giusti e assegnali
+            // code
+            scegli_id(risposta, numero_profili, numero_giocatori, profili, giocatori, prov);
+
+
+            free(prov);
+        }
     }
 
 
 
 
-
+    // VISUALIZZAZIONE PROFILI E GIOCATORI PER IL DEBUG
 
     printf("\n\nCi sono %d profili:", numero_profili);
     for(int j = 0; j < numero_profili; j++) {
@@ -272,11 +286,37 @@ char *scegli_file() {
 
 
 
+void scegli_id(int numero_scelto, int numero_profili, int numero_giocatori, ProfiloGiocatore *profili, Elenco *giocatori, int *prov) {
 
+    int scelta, id;
 
-void scegli_id(int numero_profili) {
+    if(numero_scelto > 0) {
+        printf("\nQuesti sono i profili a disposizione: (ancora %d da scegliere)", numero_scelto);
+        for(int i = 0; i < numero_profili; i++) {
+            printf("\n[%d] -> %s", i, profili[prov[i]].nome);
+        }
 
-    // code
+        scelta = get_int("\n\nScelta: ", 0, numero_profili - 1);
+        getchar();
+
+        do {
+            printf("\nId di %s: ", profili[prov[scelta]].nome);
+            id = get_int("", 0, numero_giocatori - 1);
+            getchar();
+
+            if(is_player(giocatori[id])) {
+                printf("\nHai gia' usato questo id, scegline un altro");
+            }
+
+        } while(is_player(giocatori[id]));
+
+        profili[prov[scelta]].id = id;
+        giocatori[id].p = &profili[prov[scelta]];
+
+        prov[scelta] = prov[numero_profili - 1];
+
+        scegli_id(numero_scelto - 1, numero_profili - 1, numero_giocatori, profili, giocatori, prov);
+    }
 }
 
 
