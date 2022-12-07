@@ -6,7 +6,7 @@
 #define DAVIDE_FLORE_66174_MAIN_H
 
 
-#include "files.h"
+#include "scrematura.h"
 
 #define MAX_GIOCATORI 999
 
@@ -20,6 +20,7 @@ ProfiloGiocatore *crea_profili(int *, int *);
 ProfiloGiocatore *leggi_file(int *, bool *, FILE *);
 Elenco *aggiunte(int *, int *, ProfiloGiocatore *, FILE *);
 char *scegli_file();
+void scegli_id(int, int, int, ProfiloGiocatore *, Elenco *, int *);
 
 
 

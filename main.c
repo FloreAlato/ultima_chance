@@ -4,11 +4,6 @@
 
 
 
-void scegli_id(int, int, int, ProfiloGiocatore *, Elenco *, int *);
-
-
-
-
 int main() {
 
     // VARIABILI
@@ -50,7 +45,26 @@ int main() {
         // fai lo switch del separatore e agisci di conseguenza
         switch (separatore) {
             case SALVA:       // salva
-                // usa le funzioni di salvataggio e aggiornamento della lista
+                printf("\n\nCome vuoi chiamare il file di salvataggio?");
+                printf("\nAttento, se scegli un nome gia' usato, il file verra' sovrascritto!\n\nScelta: ");
+                char nome_file[32];
+                scanf(" %s", nome_file);
+
+                file = fopen_secure(make_path(nome_file, ".bin"), "wb");
+                save_nogame(numero_profili, profili, file);
+                add_file(nome_file);
+                fclose(file);
+
+                char fine[2][DIM_OPZIONE] = {"continua", "esci"};
+                printf("\n\nContinui a giocare o esci dal gioco? (continua / esci)");
+                bool fin = (bool)choice_string("\nRisposta: ", 2, fine);
+
+                if(fin) {
+                    printf("\n\nAddio allora! (invio)");
+                    getchar();
+                    free(profili);
+                    exit(0);
+                }
                 break;
             case INIZIA:       // inizia
                 printf("\n\nAllora cominciamo!\nSi parte dal riempimento della lista dei giocatori!\n\n");
@@ -131,6 +145,70 @@ int main() {
     for(int i = 0; i < numero_giocatori; i++) {
         printf("\n[%s] - > %d", print_player(giocatori[i]), giocatori[i].vivo);
     }
+
+
+
+
+
+
+    // CONTROLLA QUANTI GIOCATORI SONO IN VITA E GENERA IL NUOVO ELENCO
+
+
+
+    int numero_giocatori_vivi = 0;
+    Elenco *giocatori_vivi = NULL;
+
+
+    if(game) {
+        int j = 0;
+        giocatori_vivi = (Elenco *) calloc(1, sizeof(Elenco));
+
+        // controlla quanti giocatori sono in vita
+        for(int i = 0; i < numero_giocatori; i++) {
+            if(giocatori[i].vivo) {
+                numero_giocatori_vivi += 1;
+
+                if(numero_giocatori_vivi > 1) {
+                    giocatori_vivi = (Elenco *) realloc(giocatori_vivi, sizeof(Elenco) * numero_giocatori_vivi);
+                }
+
+                giocatori_vivi[j] = giocatori[i];
+
+                j++;
+            }
+        }
+
+
+    } else {
+        numero_giocatori_vivi = numero_giocatori;
+        giocatori_vivi = giocatori;
+    }
+
+
+    printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
+    for(int i = 0; i < numero_giocatori_vivi; i++) {
+        printf("\n%s", print_player(giocatori_vivi[i]));
+    }
+
+
+
+
+    if(numero_giocatori_vivi > 2) {
+        printf("\n\nSCREMATURA TIME!!!");
+    } else {
+        printf("\n\nAndate bene, facciamola finita");
+    }
+
+
+
+
+    // SCREMATURA
+
+    // prendi i giocatori correnti e riducili in due
+    // controlla prima quanti ne sono rimasti
+
+
+
 
     // ALLOCA I 3 ARRAY (eventualmente controlla che siano significativi e riallocali)
     // SCREMATURA (eventualmente controlla che siano significativi e riallocali)
