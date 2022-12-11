@@ -15,6 +15,8 @@ int main() {
     Elenco *giocatori = NULL;
     bool game = false;
 
+    srand(time(NULL));
+
 
 
     // CARICA O INSERISCI
@@ -39,26 +41,14 @@ int main() {
     } else {       // se scegli di inserire i profili manualmente
 
         int separatore;
+        bool fin;
 
         profili = crea_profili(&numero_profili, &separatore);
 
         // fai lo switch del separatore e agisci di conseguenza
         switch (separatore) {
             case SALVA:       // salva
-                printf("\n\nCome vuoi chiamare il file di salvataggio?");
-                printf("\nAttento, se scegli un nome gia' usato, il file verra' sovrascritto!\n\nScelta: ");
-                char nome_file[32];
-                scanf(" %s", nome_file);
-
-                file = fopen_secure(make_path(nome_file, ".bin"), "wb");
-                save_nogame(numero_profili, profili, file);
-                add_file(nome_file);
-                fclose(file);
-
-                char fine[2][DIM_OPZIONE] = {"continua", "esci"};
-                printf("\n\nContinui a giocare o esci dal gioco? (continua / esci)");
-                bool fin = (bool)choice_string("\nRisposta: ", 2, fine);
-
+                fin = save_short(numero_profili, profili);
                 if(fin) {
                     printf("\n\nAddio allora! (invio)");
                     getchar();
@@ -156,12 +146,12 @@ int main() {
 
 
     int numero_giocatori_vivi = 0;
-    Elenco *giocatori_vivi = NULL;
+    Elenco **giocatori_vivi = NULL;
 
 
     if(game) {
         int j = 0;
-        giocatori_vivi = (Elenco *) calloc(1, sizeof(Elenco));
+        giocatori_vivi = (Elenco **) calloc(1, sizeof(Elenco *));
 
         // controlla quanti giocatori sono in vita
         for(int i = 0; i < numero_giocatori; i++) {
@@ -169,10 +159,10 @@ int main() {
                 numero_giocatori_vivi += 1;
 
                 if(numero_giocatori_vivi > 1) {
-                    giocatori_vivi = (Elenco *) realloc(giocatori_vivi, sizeof(Elenco) * numero_giocatori_vivi);
+                    giocatori_vivi = (Elenco **) realloc(giocatori_vivi, sizeof(Elenco *) * numero_giocatori_vivi);
                 }
 
-                giocatori_vivi[j] = giocatori[i];
+                giocatori_vivi[j] = &giocatori[i];
 
                 j++;
             }
@@ -181,31 +171,49 @@ int main() {
 
     } else {
         numero_giocatori_vivi = numero_giocatori;
-        giocatori_vivi = giocatori;
+        giocatori_vivi = (Elenco **) calloc(numero_giocatori_vivi, sizeof(Elenco *));
+        for(int i = 0; i < numero_giocatori_vivi; i++) {
+            giocatori_vivi[i] = &giocatori[i];
+        }
     }
 
 
     printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
     for(int i = 0; i < numero_giocatori_vivi; i++) {
-        printf("\n%s", print_player(giocatori_vivi[i]));
+        printf("\n%s", print_player(*giocatori_vivi[i]));
     }
 
 
 
 
     if(numero_giocatori_vivi > 2) {
-        printf("\n\nSCREMATURA TIME!!!");
-    } else {
-        printf("\n\nAndate bene, facciamola finita");
+        int conto = 1;
+        while(pow(2, conto) < numero_giocatori_vivi) {
+            conto++;
+        }
+        int target = (int)pow(2, conto - 2);
+
+        printf("\n\n\nAbbiamo un problema qui! %d giocatori sono troppi! %d sono piu' comodi...", numero_giocatori_vivi, target);
+
+        // SCREMATURA
+
+        Elenco **risultato = scrematura(numero_giocatori_vivi, target, giocatori_vivi, numero_profili, profili);
+
+        printf("\n\n\nCi sono %d giocatori in vita, e sono:", target);
+        for(int i = 0; i < target; i++) {
+            printf("\n%s", print_player(*risultato[i]));
+        }
+
+        printf("\n\nCi sono %d giocatori:", numero_giocatori);
+        for(int i = 0; i < numero_giocatori; i++) {
+            printf("\n[%s] - > %d", print_player(giocatori[i]), giocatori[i].vivo);
+        }
     }
 
 
 
 
     // SCREMATURA
-
-    // prendi i giocatori correnti e riducili in due
-    // controlla prima quanti ne sono rimasti
 
 
 
@@ -220,6 +228,7 @@ int main() {
     // LIBERA LA MEMORIA ALLOCATA DINAMICAMENTE
     free(profili);
     free(giocatori);
+    free(giocatori_vivi);
     return 0;
 }
 

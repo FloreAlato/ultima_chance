@@ -160,6 +160,30 @@ void add_file(char *newname) {
 
 
 
+// salva un file senza partita in corso
+bool save_short(int numero_profili, ProfiloGiocatore *profili) {
+
+    printf("\n\nCome vuoi chiamare il file di salvataggio?");
+    printf("\nAttento, se scegli un nome gia' usato, il file verra' sovrascritto!\n\nScelta: ");
+    char nome_file[32];
+    scanf(" %s", nome_file);
+
+    FILE *file = fopen_secure(make_path(nome_file, ".bin"), "wb");
+    save_nogame(numero_profili, profili, file);
+    add_file(nome_file);
+    fclose(file);
+
+    char fine[2][DIM_OPZIONE] = {"continua", "esci"};
+    printf("\n\nContinui a giocare o esci dal gioco? (continua / esci)");
+    bool fin = (bool)choice_string("\nRisposta: ", 2, fine);
+
+    return fin;
+}
+
+
+
+
+
 void restore() {
 
     char names[4][32] = {

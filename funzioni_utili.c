@@ -174,4 +174,21 @@ int si_no(char *query) {
 }
 
 
+int rand_int(int min, int max) {
+    return (rand() % (max - min + 1)) + min;
+}
 
+
+
+
+int rand_int_between(int num1, int num2) {
+
+    // prende un numero a caso fra i due e ritorna l'estremo più vicino
+    int mid = rand_int(0, 10);
+
+    if(mid > 5) {
+        return num2;
+    } else {
+        return num1;
+    }
+}

@@ -9,6 +9,7 @@
 
 
 
-void scrematura(int *);
+Elenco **scrematura(int, int, Elenco **, int, ProfiloGiocatore *);
+int indovina_il_numero();
 
 #endif //DAVIDE_FLORE_66174_SCREMATURA_H

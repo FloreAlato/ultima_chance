@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <time.h>
 
 #define DIM_NOME 64
 #define DIM_OPZIONE 10
@@ -42,6 +43,8 @@ Elenco *componi_elenco(int);
 bool is_player(Elenco);
 char *print_player(Elenco);
 int si_no(char *);
+int rand_int(int, int);
+int rand_int_between(int, int);
 
 
 
