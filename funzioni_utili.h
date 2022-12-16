@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <time.h>
+#include <stdarg.h>
 
 #define DIM_NOME 64
 #define DIM_OPZIONE 10
@@ -33,6 +34,7 @@ typedef struct {
     ProfiloGiocatore *p;
     bool vivo;
 } Elenco;
+
 
 
 int choice_string(char *, int, char[][DIM_OPZIONE]);

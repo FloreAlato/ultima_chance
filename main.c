@@ -6,6 +6,24 @@
 
 int main() {
 
+
+    ProfiloGiocatore prova_profili[2] = {
+            {0, "Andrea Sangaino\0", 0, 0, 0, 0, 0},
+            {2, "Davide Flore\0", 0, 0, 0, 0, 0}
+    };
+
+    Elenco prova_giocatori[3] = {
+            {0, &prova_profili[0], true},
+            {1, NULL, true},
+            {2, &prova_profili[1], true}
+    };
+
+    indovina_il_numero(3, prova_giocatori);
+
+
+
+    return 0;
+
     // VARIABILI
     int numero_giocatori = 0;
     int numero_giocatori_veri = 0;
@@ -19,14 +37,14 @@ int main() {
 
 
 
-    // CARICA O INSERISCI
+    // OPERAZIONI PRE PARTITA (inserimento profili / caricamento salvataggi)
+
     char opzioni[2][DIM_OPZIONE] = {"carica", "inserisci"};
 
     printf("\nVuoi creare un nuovo profilo o caricare un file di salvataggio? (carica / inserisci)\n");
     bool scelta = choice_string("Risposta: ", 2, opzioni);
 
 
-    // carica o inserisci
     if(!scelta) {       // se scegli di caricare la partita
 
         file = fopen_secure(scegli_file(), "rb");
@@ -71,8 +89,8 @@ int main() {
 
 
 
+    // OPERAZIONI PRE PARTITA (generazione dell'elenco giocatori)
 
-    // CREA O CONTROLLA ELENCO
     if(!game) {       // vuol dire che il gioco non e' iniziato e bisogna inserire il numero totale
 
         // chiedi il numero di giocatori
@@ -110,7 +128,7 @@ int main() {
                 prov[i] = i;
             }
 
-            // code
+            // processo di scelta degli id, debuggato
             scegli_id(risposta, numero_profili, numero_giocatori, profili, giocatori, prov);
 
 
@@ -139,15 +157,10 @@ int main() {
 
 
 
-
-
-    // CONTROLLA QUANTI GIOCATORI SONO IN VITA E GENERA IL NUOVO ELENCO
-
-
+    // CONTROLLO GIOCATORI IN VITA (nel caso venga caricato un file con scrematura incompleta)
 
     int numero_giocatori_vivi = 0;
     Elenco **giocatori_vivi = NULL;
-
 
     if(game) {
         int j = 0;
@@ -168,7 +181,6 @@ int main() {
             }
         }
 
-
     } else {
         numero_giocatori_vivi = numero_giocatori;
         giocatori_vivi = (Elenco **) calloc(numero_giocatori_vivi, sizeof(Elenco *));
@@ -177,6 +189,7 @@ int main() {
         }
     }
 
+    // STAMPA GIOCATORI IN VITA PER IL DEBUG
 
     printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
     for(int i = 0; i < numero_giocatori_vivi; i++) {
@@ -185,6 +198,12 @@ int main() {
 
 
 
+
+
+
+
+
+    // SCREMATURA (se non gia' avvenuta completamente)
 
     if(numero_giocatori_vivi > 2) {
         int conto = 1;
@@ -197,38 +216,48 @@ int main() {
 
         // SCREMATURA
 
-        Elenco **risultato = scrematura(numero_giocatori_vivi, target, giocatori_vivi, numero_profili, profili);
+        giocatori_vivi = scrematura(numero_giocatori_vivi, target, giocatori_vivi, numero_profili, profili);
+        numero_giocatori_vivi = target;
 
-        printf("\n\n\nCi sono %d giocatori in vita, e sono:", target);
-        for(int i = 0; i < target; i++) {
-            printf("\n%s", print_player(*risultato[i]));
-        }
-
-        printf("\n\nCi sono %d giocatori:", numero_giocatori);
-        for(int i = 0; i < numero_giocatori; i++) {
-            printf("\n[%s] - > %d", print_player(giocatori[i]), giocatori[i].vivo);
+        printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
+        for(int i = 0; i < numero_giocatori_vivi; i++) {
+            printf("\n%s", print_player(*giocatori_vivi[i]));
         }
     }
 
 
 
 
-    // SCREMATURA
+
+    // SVOLGIMENTO (se non gia' avvenuto con successo)
+
+    if(numero_giocatori_vivi > 2) {
+        // svolgimento
+        // sistema scalare per ridurre il numero
+        // non dimenticare di far scegliere i giochi a Riccardo Scateni
+    }
 
 
 
 
-    // ALLOCA I 3 ARRAY (eventualmente controlla che siano significativi e riallocali)
-    // SCREMATURA (eventualmente controlla che siano significativi e riallocali)
-    // FINALE
+
+    // FINALE (controlla che almeno uno sia utente)
+
+    if(numero_giocatori_vivi == 2) {
+        // blackjack
+    } else {
+        printf("\n\nMANNAGGIA, DAVIDE! HAI FATTO UN CASINO!!");
+    }
 
 
 
 
     // LIBERA LA MEMORIA ALLOCATA DINAMICAMENTE
+
     free(profili);
     free(giocatori);
     free(giocatori_vivi);
+
     return 0;
 }
 

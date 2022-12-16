@@ -92,26 +92,29 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
             }
 
             // GIOCA A INDOVINA IL NUMERO CON IL GRUPPETTO DI DIMENSIONE DIM
-            //winner = indovina_il_numero();
-            winner = rand_int(0, dim);
+            winner = indovina_il_numero(dim, *gruppetti[i]);
 
 
+            printf("\n\n\nIl frontman si trova nel %do gruppetto", pos_frontman);
 
 
             // FRONTMAN DELLO SPR1D GAME
             if(pos_frontman == i) {
-                // fai vincere Riccardo Scateni
-                // trova Riccardo Scateni nel gruppetto e lo fa vincere
-                int d = 0;
+
+                // trova riccardo e lo fa vincere
                 bool found = false;
-                while(d < dim && !found) {
-                    if(strcmp(giocatori[i][d].p->nome, "Riccardo Scateni") == 0) {
+
+                for(int d = 0; d < dim && !found; d++) {
+                    if(is_player(*gruppetti[i][d]) && strcmp(gruppetti[i][d]->p->nome, "Riccardo Scateni") == 0) {
                         winner = d;
                         found = true;
                     }
-                    d++;
                 }
             }
+
+
+
+
 
             // AGGIORNA I DATI GIOCATORE (rivedere)
             for(int j = 0; j <= dim; j++) {
@@ -178,4 +181,50 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
     free(pla);
 
     return risultato_scrematura;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
+
+    game_cell *eventi = (game_cell *) calloc(5, sizeof(game_cell));
+
+    nome_gioco(eventi, INDOVINA);
+    layout_turni(eventi, giocatori, numero_giocatori, 3, 1);
+
+    printf("\n\n");
+    area_gioco(5, eventi);
+
+    int turno = 1;
+
+    getchar();
+    prossimo_turno(&eventi[3], &giocatori[0], numero_giocatori, turno);
+    printf("\n\n");
+
+    area_gioco(5, eventi);
+
+
+    turno = 0;
+
+    getchar();
+    prossimo_turno(&eventi[3], &giocatori[0], numero_giocatori, turno);
+    printf("\n\n");
+
+    area_gioco(5, eventi);
+
+    free(eventi);
+
+    return rand_int(0, numero_giocatori - 1);
 }
