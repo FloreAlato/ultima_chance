@@ -22,24 +22,15 @@ void area_gioco(int numero_eventi, game_cell *eventi) {
 
 
     // parte centrale
-    int conto = 0, j, spazio = 0;
+    int conto = 0;
     for(int i = 0; i < ALTEZZA; i++) {
         printf("|");
         if(conto < numero_eventi && i == eventi[conto].y) {
-            for(j = 0; j < eventi[conto].x; j++) {
-                printf(" ");
-            }
-
-            // stampa la roba importante
-            printf("%s", eventi[conto].content);
-
-            for(j = 0; j < LARGHEZZA - strlen(eventi[conto].content) - eventi[conto].x; j++) {
-                printf(" ");
-            }
+            stampa_riga(eventi[conto]);
 
             conto++;
         } else {
-            for(j = 0; j < LARGHEZZA; j++) {
+            for(int j = 0; j < LARGHEZZA; j++) {
                 printf(" ");
             }
         }
@@ -54,24 +45,54 @@ void area_gioco(int numero_eventi, game_cell *eventi) {
 
 
 
+void stampa_riga(game_cell evento) {
+
+    int spazio = 0;
+
+    for(int i = 0; i < evento.x; i++) {
+        printf(" ");
+    }
+    for(int i = 0; i < evento.n; i++) {
+        printf("%s", evento.content[i]);
+        spazio += (int)strlen(evento.content[i]);
+    }
+    for(int i = 0; i <LARGHEZZA - spazio - evento.x; i++) {
+        printf(" ");
+    }
+}
 
 
 
-void nome_gioco(game_cell *lista_eventi, giochi gioco) {
 
-    switch (gioco) {
+
+
+
+
+
+
+
+void nome_gioco(game_cell *evento, giochi gioco) {
+
+    char **nome = (char **) malloc(sizeof(char) * 2);
+    nome[0] = (char *) malloc(sizeof(char) * 10);
+    nome[1] = (char *) malloc(sizeof(char) * 30);
+    nome[0] = "Stai giocanco a \0";
+
+    switch(gioco) {
         case INDOVINA:
-            lista_eventi[0].content = "Stai giocanco a INDOVINA IL NUMERO";
+            nome[1] = "INDOVINA IL NUMERO\0";
             break;
         case PARI_DISPARI:
-            lista_eventi[0].content = "Stai giocanco a PARI O DISPARI";
+            nome[1] = "PARI O DISPARI\0";
             break;
         default:
             break;
     }
 
-    lista_eventi[0].y = 0;
-    lista_eventi[0].x = SPAZIO_SINISTRA;
+    evento->y = 0;
+    evento->n = 2;
+    evento->content = nome;
+    evento->x = SPAZIO_SINISTRA;
 }
 
 
@@ -82,37 +103,64 @@ void nome_gioco(game_cell *lista_eventi, giochi gioco) {
 
 
 
-void layout_turni(game_cell *lista_eventi, Elenco *giocatori, int numero_giocatori, int pos, int id) {
+void layout_turni(game_cell *evento, Elenco *giocatori, int numero_giocatori, int pos) {
 
-    char spazio[5] = "    ";
+    // prima riga (tocca a:)
+    char **intro = (char **) calloc(2, sizeof(char *));
+    intro[0] = (char *) malloc(sizeof(char) * 10);
+    intro[1] = (char *) malloc(sizeof(char) * 10);
+    intro[0] = "Tocca a\0";
+    intro[1] = ":\0";
 
-    lista_eventi[id].y = pos;
-    lista_eventi[id].content = "Tocca a:";
 
-    lista_eventi[id + 1].y = pos + 1;
+    // seconda riga (nomi giocatori)
+    char *segnaposto = (char *) malloc(sizeof(char) * 9);
+    segnaposto = "    \0";
 
-    char *nome = (char *) malloc(sizeof(char) * 60);
-    strcpy(nome, print_player(giocatori[0]));
+    char **turni = (char **) calloc((numero_giocatori * 2) - 1, sizeof(char *));
 
-    for(int i = 1; i < numero_giocatori; i++) {
-        nome = strcat(nome, spazio);
-        nome = strcat(nome, print_player(giocatori[i]));
+    int counter = 0;
+    for(int i = 0; i < (numero_giocatori * 2) - 1; i++) {
+        if(i % 2 == 0) {
+            turni[i] = print_player(giocatori[counter]);
+            counter++;
+        } else {
+            turni[i] = segnaposto;
+        }
     }
-    lista_eventi[id + 1].content = nome;
 
-    lista_eventi[id + 2].y = pos + 2;
-    lista_eventi[id + 2].content = "^";
 
-    lista_eventi[id].x = lista_eventi[id + 1].x = lista_eventi[id + 2].x = SPAZIO_SINISTRA;
+    // terza riga (freccia)
+    char **fine = (char **) calloc(2, sizeof(char *));
+    fine[0] = (char *) malloc(sizeof(char) * 2);
+    fine[1] = (char *) malloc(sizeof(char) * 2);
+    fine[0] = "^\0";
+    fine[1] = " \0";
 
+
+    evento->y = pos;
+    evento->n = 2;
+    evento->x = SPAZIO_SINISTRA;
+    evento->content = intro;
+
+    (evento + 1)->y = pos + 1;
+    (evento + 1)->n = (numero_giocatori * 2) - 1;
+    (evento + 1)->x = SPAZIO_SINISTRA;
+    (evento + 1)->content = turni;
+
+    (evento + 2)->y = pos + 2;
+    (evento + 2)->n = 1;
+    (evento + 2)->x = SPAZIO_SINISTRA;
+    (evento + 2)->content = fine;
 }
 
 
 
 
+// controlla
 void prossimo_turno(game_cell *evento, Elenco *giocatori, int numero_giocatori, int turno) {
 
-    if(turno == numero_giocatori) {
+    if(turno == 0) {
         evento->x = SPAZIO_SINISTRA;
     } else {
         evento->x += (int)strlen(print_player(giocatori[turno - 1])) + 4;

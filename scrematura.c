@@ -199,32 +199,110 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
 
 int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
 
-    game_cell *eventi = (game_cell *) calloc(5, sizeof(game_cell));
+    game_cell *eventi = (game_cell *) calloc(9, sizeof(game_cell));
 
-    nome_gioco(eventi, INDOVINA);
-    layout_turni(eventi, giocatori, numero_giocatori, 3, 1);
 
-    printf("\n\n");
-    area_gioco(5, eventi);
 
-    int turno = 1;
+    char *riga = riga_indovina();
+
+
+    // inizializza le componenti della partita
+    nome_gioco(&eventi[0], INDOVINA);
+    layout_riga(&eventi[1], riga, 3);
+    layout_turni(&eventi[3], giocatori, numero_giocatori, 9);
+
+    area_gioco(6, eventi);
+
 
     getchar();
-    prossimo_turno(&eventi[3], &giocatori[0], numero_giocatori, turno);
-    printf("\n\n");
+    //prossimo_turno(eventi, giocatori, numero_giocatori, 1);
+    aggiorna_riga(eventi, 700, 500);
 
-    area_gioco(5, eventi);
+    area_gioco(6, eventi);
 
 
-    turno = 0;
-
-    getchar();
-    prossimo_turno(&eventi[3], &giocatori[0], numero_giocatori, turno);
-    printf("\n\n");
-
-    area_gioco(5, eventi);
 
     free(eventi);
 
     return rand_int(0, numero_giocatori - 1);
+}
+
+
+
+
+
+
+
+
+char *riga_indovina() {
+
+    char *riga = (char *) calloc(100, sizeof(char));
+
+    for(int i = 0; i < 99; i++) {
+        riga[i] = '.';
+    }
+    riga[99] = '\0';
+
+    return riga;
+}
+
+
+
+
+
+
+void layout_riga(game_cell *evento, char *riga, int pos) {
+
+    char **frasi_riga = (char **) calloc(3, sizeof(char *));
+    frasi_riga[0] = (char *) malloc(sizeof(char) * 4);
+    strcpy(frasi_riga[0], "[0]\0");
+    frasi_riga[1] = riga;
+    frasi_riga[2] = (char *) malloc(sizeof(char) * 6);
+    strcpy(frasi_riga[2], "[999]\0");
+
+    char **frasi_conteggio = (char **) calloc(5, sizeof(char *));
+
+    for(int i = 0; i < 5; i++) {
+        frasi_conteggio[i] = (char *) malloc(sizeof(char) * 10);
+    }
+
+    strcpy(frasi_conteggio[0], "[");
+    strcpy(frasi_conteggio[2], "] < X < [");
+    strcpy(frasi_conteggio[4], "]");
+
+    frasi_conteggio[1] = int_to_string(MIN_INDOVINA);
+    frasi_conteggio[3] = int_to_string(MAX_INDOVINA);
+
+    evento->y = pos;
+    evento->n = 3;
+    evento->x = SPAZIO_SINISTRA;
+    evento->content = frasi_riga;
+
+    (evento + 1)->y = pos + 1;
+    (evento + 1)->n = 5;
+    (evento + 1)->x = SPAZIO_SINISTRA;
+    (evento + 1)->content = frasi_conteggio;
+}
+
+
+
+
+
+
+
+void aggiorna_riga(game_cell *lista_eventi, int tentativo, int numero) {
+
+    if(tentativo < numero) {
+        lista_eventi[1].content[1][tentativo / 10] = 'B';
+
+        lista_eventi[2].content[1] = int_to_string(tentativo);
+
+    } else if(tentativo > numero) {
+        lista_eventi[1].content[1][tentativo / 10] = 'A';
+
+        lista_eventi[2].content[3] = int_to_string(tentativo);
+
+    } else {
+        lista_eventi[1].content[1][tentativo / 10] = 'X';
+    }
 }

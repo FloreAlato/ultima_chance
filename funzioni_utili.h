@@ -40,6 +40,7 @@ typedef struct {
 int choice_string(char *, int, char[][DIM_OPZIONE]);
 int get_int(char *, int, int);
 int string_to_int(char *);
+char *int_to_string(int);
 bool is_numeric(char *);
 Elenco *componi_elenco(int);
 bool is_player(Elenco);

@@ -91,6 +91,25 @@ int string_to_int(char *str) {
 
 
 
+char *int_to_string(int numero) {
+
+    char *result = (char *) calloc(4, sizeof(char));
+
+    if(numero >= 0) {
+        // altrimenti converte l'id in stringa e ci mette "Giocatore " davanti
+        int powers[3] = {100, 10, 1};
+        int num = numero;
+        for(int i = 0; i < 3; i++) {
+            result[i] = (char)((num / powers[i]) + 48);
+            num %= powers[i];
+        }
+    }
+    return result;
+}
+
+
+
+
 
 bool is_numeric(char *num) {
 
@@ -146,7 +165,10 @@ char *print_player(Elenco player) {
     if(is_player(player)) {
         return player.p->nome;
     } else {
-        if(player.id >= 0) {
+        strcpy(ret, "Giocatore \0");
+        ret = strcat(ret, int_to_string(player.id));
+
+        /*if(player.id >= 0) {
             // altrimenti converte l'id in stringa e ci mette "Giocatore " davanti
             int powers[3] = {100, 10, 1};
             int num = player.id;
@@ -157,7 +179,7 @@ char *print_player(Elenco player) {
                 num %= powers[i];
             }
             ret[14] = '\0';
-        }
+        }*/
 
         return ret;
     }

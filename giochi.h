@@ -7,7 +7,7 @@
 
 #include "files.h"
 
-#define LARGHEZZA 100
+#define LARGHEZZA 110
 #define ALTEZZA 20
 #define SPAZIO_SINISTRA 2
 
@@ -20,16 +20,18 @@ typedef enum {
 typedef struct {
     int y;
     int x;
-    char *content;
+    int n;
+    char **content;
 } game_cell;
 
 
 
 // code
 void area_gioco(int, game_cell *);
+void stampa_riga(game_cell);
 
 void nome_gioco(game_cell *, giochi);
-void layout_turni(game_cell *, Elenco *, int, int, int);
-void prossimo_turno(game_cell *, Elenco *, int, int);
+void layout_turni(game_cell *, Elenco *, int, int pos);
+void prossimo_turno(game_cell *, Elenco *, int numero, int turno);
 
 #endif //DAVIDE_FLORE_66174_GIOCHI_H
