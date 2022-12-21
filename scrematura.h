@@ -17,7 +17,7 @@
 
 
 Elenco **scrematura(int, int, Elenco **, int, ProfiloGiocatore *);
-int indovina_il_numero(int, Elenco *);
+int indovina_il_numero(int, Elenco **);
 
 char *riga_indovina();
 void layout_riga(game_cell *, char *, int);

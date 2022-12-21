@@ -6,6 +6,9 @@
 int main() {
 
 
+    /*srand(time(NULL));
+
+
     ProfiloGiocatore prova_profili[2] = {
             {0, "Andrea Sangaino\0", 0, 0, 0, 0, 0},
             {2, "Davide Flore\0", 0, 0, 0, 0, 0}
@@ -17,11 +20,14 @@ int main() {
             {2, &prova_profili[1], true}
     };
 
-    indovina_il_numero(3, prova_giocatori);
+
+    printf("\n\n\nHa vinto %s!!!", print_player(prova_giocatori[indovina_il_numero(3, prova_giocatori)]));
 
 
 
-    return 0;
+    return 0;*/
+
+
 
     // VARIABILI
     int numero_giocatori = 0;

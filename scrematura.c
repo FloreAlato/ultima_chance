@@ -13,7 +13,7 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
     int totale = numero_giocatori - 1;
     int segnaposto;
 
-    int risultati[target];
+
 
     int pos_frontman = -1;
     Elenco **risultato_scrematura = (Elenco **) calloc(target, sizeof(Elenco *));
@@ -64,7 +64,7 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
     for(int i = 0; i < target; i++) {
         printf("\n%do gruppo: ( ", i);
         for(int j = 0; j < dim_gruppetti + 1; j++) {
-            if(gruppetti[i][j] != NULL) {
+            if(gruppetti[i][j]->id > -1) {
                 printf("%s ", print_player(*gruppetti[i][j]));
             }
         }
@@ -86,13 +86,13 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
             getchar();
 
             if(gruppetti[i][dim_gruppetti]->id == -1) {
-                dim = dim_gruppetti - 1;
-            } else {
                 dim = dim_gruppetti;
+            } else {
+                dim = dim_gruppetti + 1;
             }
 
             // GIOCA A INDOVINA IL NUMERO CON IL GRUPPETTO DI DIMENSIONE DIM
-            winner = indovina_il_numero(dim, *gruppetti[i]);
+            winner = indovina_il_numero(dim, gruppetti[i]);
 
 
             printf("\n\n\nIl frontman si trova nel %do gruppetto", pos_frontman);
@@ -197,34 +197,72 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
 
 
 
-int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
+int indovina_il_numero(int numero_giocatori, Elenco **giocatori) {
+
+    int min = MIN_INDOVINA;
+    int max = MAX_INDOVINA;
+
+    int numero = rand_int(min, max);
+
 
     game_cell *eventi = (game_cell *) calloc(9, sizeof(game_cell));
 
-
-
     char *riga = riga_indovina();
-
 
     // inizializza le componenti della partita
     nome_gioco(&eventi[0], INDOVINA);
     layout_riga(&eventi[1], riga, 3);
     layout_turni(&eventi[3], giocatori, numero_giocatori, 9);
 
-    area_gioco(6, eventi);
-
-
-    getchar();
-    //prossimo_turno(eventi, giocatori, numero_giocatori, 1);
-    aggiorna_riga(eventi, 700, 500);
 
     area_gioco(6, eventi);
 
 
+    int turno = 0, tentativo, winner;
+    bool vinto = false;
+    while(!vinto) {
+
+        printf("\n\n");
+        area_gioco(6, eventi);
+
+        printf("[%s]: ", print_player(*giocatori[turno]));
+        if(is_player(*giocatori[turno])) {
+            tentativo = get_int("", MIN_INDOVINA, MAX_INDOVINA);
+            getchar();
+        } else {
+            tentativo = rand_int(min, max);
+            printf("%d", tentativo);
+            getchar();
+        }
+
+        if(tentativo == numero) {
+            vinto = true;
+            winner = turno;
+
+        } else if(tentativo < numero) {
+            min = tentativo;
+        } else {
+            max = tentativo;
+        }
+
+        if(turno < numero_giocatori - 1) {
+            turno++;
+        } else {
+            turno = 0;
+        }
+
+
+        aggiorna_riga(&eventi[1], tentativo, numero);
+        prossimo_turno(&eventi[5], giocatori, turno);
+    }
 
     free(eventi);
 
-    return rand_int(0, numero_giocatori - 1);
+
+    // STAMPA SCHERMATA DI VITTORIA
+
+
+    return winner;
 }
 
 
@@ -290,19 +328,19 @@ void layout_riga(game_cell *evento, char *riga, int pos) {
 
 
 
-void aggiorna_riga(game_cell *lista_eventi, int tentativo, int numero) {
+void aggiorna_riga(game_cell *evento, int tentativo, int numero) {
 
     if(tentativo < numero) {
-        lista_eventi[1].content[1][tentativo / 10] = 'B';
+        evento->content[1][tentativo / 10] = 'B';
 
-        lista_eventi[2].content[1] = int_to_string(tentativo);
+        (evento + 1)->content[1] = int_to_string(tentativo);
 
     } else if(tentativo > numero) {
-        lista_eventi[1].content[1][tentativo / 10] = 'A';
+        evento->content[1][tentativo / 10] = 'A';
 
-        lista_eventi[2].content[3] = int_to_string(tentativo);
+        (evento + 1)->content[3] = int_to_string(tentativo);
 
     } else {
-        lista_eventi[1].content[1][tentativo / 10] = 'X';
+        evento->content[1][tentativo / 10] = 'X';
     }
 }

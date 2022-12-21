@@ -31,7 +31,7 @@ void area_gioco(int, game_cell *);
 void stampa_riga(game_cell);
 
 void nome_gioco(game_cell *, giochi);
-void layout_turni(game_cell *, Elenco *, int, int pos);
-void prossimo_turno(game_cell *, Elenco *, int numero, int turno);
+void layout_turni(game_cell *, Elenco **, int, int pos);
+void prossimo_turno(game_cell *, Elenco **, int turno);
 
 #endif //DAVIDE_FLORE_66174_GIOCHI_H

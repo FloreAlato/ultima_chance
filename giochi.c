@@ -103,7 +103,7 @@ void nome_gioco(game_cell *evento, giochi gioco) {
 
 
 
-void layout_turni(game_cell *evento, Elenco *giocatori, int numero_giocatori, int pos) {
+void layout_turni(game_cell *evento, Elenco **giocatori, int numero_giocatori, int pos) {
 
     // prima riga (tocca a:)
     char **intro = (char **) calloc(2, sizeof(char *));
@@ -122,7 +122,7 @@ void layout_turni(game_cell *evento, Elenco *giocatori, int numero_giocatori, in
     int counter = 0;
     for(int i = 0; i < (numero_giocatori * 2) - 1; i++) {
         if(i % 2 == 0) {
-            turni[i] = print_player(giocatori[counter]);
+            turni[i] = print_player(*giocatori[counter]);
             counter++;
         } else {
             turni[i] = segnaposto;
@@ -157,12 +157,12 @@ void layout_turni(game_cell *evento, Elenco *giocatori, int numero_giocatori, in
 
 
 
-// controlla
-void prossimo_turno(game_cell *evento, Elenco *giocatori, int numero_giocatori, int turno) {
+
+void prossimo_turno(game_cell *evento, Elenco **giocatori, int turno) {
 
     if(turno == 0) {
         evento->x = SPAZIO_SINISTRA;
     } else {
-        evento->x += (int)strlen(print_player(giocatori[turno - 1])) + 4;
+        evento->x += (int)strlen(print_player(*giocatori[turno - 1])) + 4;
     }
 }
