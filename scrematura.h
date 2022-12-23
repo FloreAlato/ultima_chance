@@ -16,14 +16,12 @@
 
 
 
-Elenco **scrematura(int, int, Elenco **, int, ProfiloGiocatore *);
-int indovina_il_numero(int, Elenco **);
+Elenco *scrematura(int, int, Elenco *, int, ProfiloGiocatore *, Elenco *);
+int indovina_il_numero(int, Elenco *);
 
+
+void area_gioco_indovina(int, Elenco *, int, char *, int, int);
+void stampa_intervallo_indovina(char *, int, int);
 char *riga_indovina();
-void layout_riga(game_cell *, char *, int);
-void aggiorna_riga(game_cell *, int, int);
-
-
-char *make_string(char *base, int numero_argomenti, ...);
 
 #endif //DAVIDE_FLORE_66174_SCREMATURA_H

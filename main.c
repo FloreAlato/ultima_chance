@@ -9,24 +9,26 @@ int main() {
     /*srand(time(NULL));
 
 
-    ProfiloGiocatore prova_profili[2] = {
+    ProfiloGiocatore prova_profili[3] = {
             {0, "Andrea Sangaino\0", 0, 0, 0, 0, 0},
-            {2, "Davide Flore\0", 0, 0, 0, 0, 0}
+            {2, "Davide Flore\0", 0, 0, 0, 0, 0},
+            {3, "Claudia Varsi\0", 0, 0, 0, 0, 0}
     };
 
-    Elenco prova_giocatori[3] = {
+    Elenco prova_giocatori[4] = {
             {0, &prova_profili[0], true},
             {1, NULL, true},
-            {2, &prova_profili[1], true}
+            {2, &prova_profili[1], true},
+            {3, &prova_profili[2], true}
     };
 
 
-    printf("\n\n\nHa vinto %s!!!", print_player(prova_giocatori[indovina_il_numero(3, prova_giocatori)]));
+
+
 
 
 
     return 0;*/
-
 
 
     // VARIABILI
@@ -165,11 +167,11 @@ int main() {
     // CONTROLLO GIOCATORI IN VITA (nel caso venga caricato un file con scrematura incompleta)
 
     int numero_giocatori_vivi = 0;
-    Elenco **giocatori_vivi = NULL;
+    Elenco *giocatori_vivi = NULL;
 
     if(game) {
         int j = 0;
-        giocatori_vivi = (Elenco **) calloc(1, sizeof(Elenco *));
+        giocatori_vivi = (Elenco *) calloc(1, sizeof(Elenco));
 
         // controlla quanti giocatori sono in vita
         for(int i = 0; i < numero_giocatori; i++) {
@@ -177,10 +179,10 @@ int main() {
                 numero_giocatori_vivi += 1;
 
                 if(numero_giocatori_vivi > 1) {
-                    giocatori_vivi = (Elenco **) realloc(giocatori_vivi, sizeof(Elenco *) * numero_giocatori_vivi);
+                    giocatori_vivi = (Elenco *) realloc(giocatori_vivi, sizeof(Elenco) * numero_giocatori_vivi);
                 }
 
-                giocatori_vivi[j] = &giocatori[i];
+                giocatori_vivi[j] = giocatori[i];
 
                 j++;
             }
@@ -188,9 +190,9 @@ int main() {
 
     } else {
         numero_giocatori_vivi = numero_giocatori;
-        giocatori_vivi = (Elenco **) calloc(numero_giocatori_vivi, sizeof(Elenco *));
+        giocatori_vivi = (Elenco *) calloc(numero_giocatori_vivi, sizeof(Elenco));
         for(int i = 0; i < numero_giocatori_vivi; i++) {
-            giocatori_vivi[i] = &giocatori[i];
+            giocatori_vivi[i] = giocatori[i];
         }
     }
 
@@ -198,7 +200,7 @@ int main() {
 
     printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
     for(int i = 0; i < numero_giocatori_vivi; i++) {
-        printf("\n%s", print_player(*giocatori_vivi[i]));
+        printf("\n%s", print_player(giocatori_vivi[i]));
     }
 
 
@@ -210,7 +212,7 @@ int main() {
 
     // SCREMATURA (se non gia' avvenuta completamente)
 
-    if(numero_giocatori_vivi > 2) {
+    if(numero_giocatori_vivi > 2 && !game) {
         int conto = 1;
         while(pow(2, conto) < numero_giocatori_vivi) {
             conto++;
@@ -221,13 +223,21 @@ int main() {
 
         // SCREMATURA
 
-        giocatori_vivi = scrematura(numero_giocatori_vivi, target, giocatori_vivi, numero_profili, profili);
+        giocatori_vivi = scrematura(numero_giocatori_vivi, target, giocatori_vivi, numero_profili, profili, giocatori);
         numero_giocatori_vivi = target;
 
         printf("\n\n\nCi sono %d giocatori in vita, e sono:", numero_giocatori_vivi);
         for(int i = 0; i < numero_giocatori_vivi; i++) {
-            printf("\n%s", print_player(*giocatori_vivi[i]));
+            printf("\n%s", print_player(giocatori_vivi[i]));
         }
+    }
+
+
+
+
+    printf("\n\n\n");
+    for(int i = 0; i < numero_giocatori; i++) {
+        printf("\n%s -> %d", print_player(giocatori[i]), giocatori[i].vivo);
     }
 
 
@@ -240,6 +250,8 @@ int main() {
         // svolgimento
         // sistema scalare per ridurre il numero
         // non dimenticare di far scegliere i giochi a Riccardo Scateni
+
+        // deve arrivare a 2
     }
 
 
@@ -253,7 +265,6 @@ int main() {
     } else {
         printf("\n\nMANNAGGIA, DAVIDE! HAI FATTO UN CASINO!!");
     }
-
 
 
 

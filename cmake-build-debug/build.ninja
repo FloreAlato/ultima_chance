@@ -79,6 +79,12 @@ build CMakeFiles/davide_flore_66174.dir/giochi.c.obj: C_COMPILER__davide_flore_6
   OBJECT_DIR = CMakeFiles\davide_flore_66174.dir
   OBJECT_FILE_DIR = CMakeFiles\davide_flore_66174.dir
 
+build CMakeFiles/davide_flore_66174.dir/black_jack.c.obj: C_COMPILER__davide_flore_66174_Debug C$:/Users/davyf/Desktop/davide_flore_66174/black_jack.c || cmake_object_order_depends_target_davide_flore_66174
+  DEP_FILE = CMakeFiles\davide_flore_66174.dir\black_jack.c.obj.d
+  FLAGS = -g -std=gnu99
+  OBJECT_DIR = CMakeFiles\davide_flore_66174.dir
+  OBJECT_FILE_DIR = CMakeFiles\davide_flore_66174.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target davide_flore_66174
@@ -87,7 +93,7 @@ build CMakeFiles/davide_flore_66174.dir/giochi.c.obj: C_COMPILER__davide_flore_6
 #############################################
 # Link the executable davide_flore_66174.exe
 
-build davide_flore_66174.exe: C_EXECUTABLE_LINKER__davide_flore_66174_Debug CMakeFiles/davide_flore_66174.dir/main.c.obj CMakeFiles/davide_flore_66174.dir/files.c.obj CMakeFiles/davide_flore_66174.dir/funzioni_utili.c.obj CMakeFiles/davide_flore_66174.dir/scrematura.c.obj CMakeFiles/davide_flore_66174.dir/giochi.c.obj
+build davide_flore_66174.exe: C_EXECUTABLE_LINKER__davide_flore_66174_Debug CMakeFiles/davide_flore_66174.dir/main.c.obj CMakeFiles/davide_flore_66174.dir/files.c.obj CMakeFiles/davide_flore_66174.dir/funzioni_utili.c.obj CMakeFiles/davide_flore_66174.dir/scrematura.c.obj CMakeFiles/davide_flore_66174.dir/giochi.c.obj CMakeFiles/davide_flore_66174.dir/black_jack.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\davide_flore_66174.dir

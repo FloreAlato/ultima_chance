@@ -26,12 +26,39 @@ typedef struct {
 
 
 
-// code
-void area_gioco(int, game_cell *);
-void stampa_riga(game_cell);
+// blackjack
+typedef enum {cuori, quadri, fiori, picche}semi;
 
-void nome_gioco(game_cell *, giochi);
+typedef struct {
+    semi seme;
+    int valore;
+}carta;
+
+/*char card_img[5][11] = {
+        " _______ ",
+        "|      %s|",
+        "|   %s  |",
+        "|%s      |",
+        " ------- "
+};*/
+
+
+
+
+
+// code
+//void area_gioco(int, game_cell *);
+void stampa_riga(int, int, ...);
+void stampa_riga_array(int, int, Elenco *);
+void stampa_riga_vuota(int);
+
+
+
+void stampa_turno(int, Elenco *, int);
+
+/*void nome_gioco(game_cell *, giochi);
 void layout_turni(game_cell *, Elenco **, int, int pos);
-void prossimo_turno(game_cell *, Elenco **, int turno);
+void prossimo_turno(game_cell *, Elenco **, int turno);*/
+
 
 #endif //DAVIDE_FLORE_66174_GIOCHI_H

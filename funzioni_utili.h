@@ -45,6 +45,7 @@ bool is_numeric(char *);
 Elenco *componi_elenco(int);
 bool is_player(Elenco);
 char *print_player(Elenco);
+char *print_player_ind(Elenco *);
 int si_no(char *);
 int rand_int(int, int);
 int rand_int_between(int, int);

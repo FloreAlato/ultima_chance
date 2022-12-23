@@ -185,6 +185,33 @@ char *print_player(Elenco player) {
     }
 }
 
+char *print_player_ind(Elenco *player) {
+    char *ret = calloc(14, sizeof(char));
+
+    // se ha un profilo, restituisce il nome
+    if(is_player(*player)) {
+        return player->p->nome;
+    } else {
+        strcpy(ret, "Giocatore \0");
+        ret = strcat(ret, int_to_string(player->id));
+
+        /*if(player.id >= 0) {
+            // altrimenti converte l'id in stringa e ci mette "Giocatore " davanti
+            int powers[3] = {100, 10, 1};
+            int num = player.id;
+            strcpy(ret, "Giocatore \0");
+            for(int i = 0; i < 3; i++) {
+                ret[i + 10] = (char)((num / powers[i]) + 48);
+                //printf("%d", num / powers[i]);
+                num %= powers[i];
+            }
+            ret[14] = '\0';
+        }*/
+
+        return ret;
+    }
+}
+
 
 
 

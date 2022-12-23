@@ -7,21 +7,23 @@
 
 
 
-Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int numero_profili, ProfiloGiocatore *profili) {
+Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int numero_profili, ProfiloGiocatore *profili, Elenco *originali) {
 
+    // calcola la dimensione dei gruppetti
     int dim_gruppetti = numero_giocatori / target;
     int totale = numero_giocatori - 1;
     int segnaposto;
 
 
 
+    // posizione frontman e risultato finale
     int pos_frontman = -1;
-    Elenco **risultato_scrematura = (Elenco **) calloc(target, sizeof(Elenco *));
+    Elenco *risultato_scrematura = (Elenco *) calloc(target, sizeof(Elenco));
 
     // genera "target" gruppetti di dimensione "dim_gruppetti + 1"
-    Elenco ***gruppetti = (Elenco ***) malloc(target * sizeof(Elenco **));
+    Elenco **gruppetti = (Elenco **) malloc(target * sizeof(Elenco *));
     for(int i = 0; i < target; i++) {
-        gruppetti[i] = (Elenco **) malloc((dim_gruppetti + 1) * sizeof(Elenco *));
+        gruppetti[i] = (Elenco *) malloc((dim_gruppetti + 1) * sizeof(Elenco));
     }
 
     Elenco bianco = {
@@ -42,9 +44,9 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
                 gruppetti[i][j] = giocatori[segnaposto];
 
                 // controlla utenti e posizione frontman
-                if(is_player(*gruppetti[i][j])) {
+                if(is_player(gruppetti[i][j])) {
                     pla[i] = true;
-                    if(strcmp(gruppetti[i][j]->p->nome, "Riccardo Scateni") == 0) {
+                    if(strcmp(gruppetti[i][j].p->nome, "Riccardo Scateni") == 0) {
                         pos_frontman = i;
                     }
                 }
@@ -52,20 +54,20 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
                 giocatori[segnaposto] = giocatori[totale];
                 totale--;
             } else {
-                gruppetti[i][j] = &bianco;
+                gruppetti[i][j] = bianco;
             }
         }
 
     }
 
 
-
+    // stampa i gruppetti
     printf("\n\nGruppetti:");
     for(int i = 0; i < target; i++) {
         printf("\n%do gruppo: ( ", i);
         for(int j = 0; j < dim_gruppetti + 1; j++) {
-            if(gruppetti[i][j]->id > -1) {
-                printf("%s ", print_player(*gruppetti[i][j]));
+            if(gruppetti[i][j].id > -1) {
+                printf("%s ", print_player(gruppetti[i][j]));
             }
         }
         printf(")");
@@ -77,6 +79,7 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
 
 
 
+
     int winner, dim;
 
     // gioca e riduci il numero
@@ -85,7 +88,7 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
             printf("\n\nIl %do gruppo gioca a INDOVINA IL NUMERO!!! (invio)", i);
             getchar();
 
-            if(gruppetti[i][dim_gruppetti]->id == -1) {
+            if(gruppetti[i][dim_gruppetti].id == -1) {
                 dim = dim_gruppetti;
             } else {
                 dim = dim_gruppetti + 1;
@@ -93,9 +96,10 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
 
             // GIOCA A INDOVINA IL NUMERO CON IL GRUPPETTO DI DIMENSIONE DIM
             winner = indovina_il_numero(dim, gruppetti[i]);
+            //winner = 0;
 
 
-            printf("\n\n\nIl frontman si trova nel %do gruppetto", pos_frontman);
+            //printf("\n\n\nIl frontman si trova nel %do gruppetto", pos_frontman);
 
 
             // FRONTMAN DELLO SPR1D GAME
@@ -105,7 +109,7 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
                 bool found = false;
 
                 for(int d = 0; d < dim && !found; d++) {
-                    if(is_player(*gruppetti[i][d]) && strcmp(gruppetti[i][d]->p->nome, "Riccardo Scateni") == 0) {
+                    if(is_player(gruppetti[i][d]) && strcmp(gruppetti[i][d].p->nome, "Riccardo Scateni") == 0) {
                         winner = d;
                         found = true;
                     }
@@ -119,33 +123,42 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
             // AGGIORNA I DATI GIOCATORE (rivedere)
             for(int j = 0; j <= dim; j++) {
                 if(j == winner) {       // vincitore
-                    if(is_player(*gruppetti[i][j])) {
-                        gruppetti[i][j]->p->tot_giochi_giocati++;
-                        gruppetti[i][j]->p->tot_giochi_vinti++;
+                    if(is_player(gruppetti[i][j])) {
+                        gruppetti[i][j].p->tot_giochi_giocati++;
+                        gruppetti[i][j].p->tot_giochi_vinti++;
+
+                        originali[gruppetti[i][j].id].p->tot_giochi_giocati++;
+                        originali[gruppetti[i][j].id].p->tot_giochi_vinti++;
                     }
                 } else {        // perdente
-                    if(is_player(*gruppetti[i][j])) {
-                        gruppetti[i][j]->p->tot_giochi_giocati++;
+                    if(is_player(gruppetti[i][j])) {
+                        gruppetti[i][j].p->tot_giochi_giocati++;
+
+                        originali[gruppetti[i][j].id].p->tot_giochi_giocati++;
                     }
-                    gruppetti[i][j]->vivo = false;
+                    gruppetti[i][j].vivo = false;
+
+                    originali[gruppetti[i][j].id].vivo = false;
                 }
             }
 
         } else {
 
-            if(gruppetti[i][dim_gruppetti]->id == -1) {
+            if(gruppetti[i][dim_gruppetti].id == -1) {
                 dim = dim_gruppetti - 1;
             } else {
                 dim = dim_gruppetti;
             }
             winner = rand_int(0, dim);
 
-            printf("\nIl %do gruppo ha giocato, e ha vinto %s!!", i, print_player(*gruppetti[i][winner]));
+            printf("\nIl %do gruppo ha giocato, e ha vinto %s!!", i, print_player(gruppetti[i][winner]));
 
             // uccide i giocatori perdenti
             for(int j = 0; j <= dim; j++) {
                 if(j != winner) {       // aggiorna il vincitore
-                    gruppetti[i][j]->vivo = false;
+                    gruppetti[i][j].vivo = false;
+
+                    originali[gruppetti[i][j].id].vivo = false;
                 }
             }
         }
@@ -192,41 +205,27 @@ Elenco **scrematura(int numero_giocatori, int target, Elenco **giocatori, int nu
 
 
 
+int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
 
-
-
-
-
-int indovina_il_numero(int numero_giocatori, Elenco **giocatori) {
-
-    int min = MIN_INDOVINA;
     int max = MAX_INDOVINA;
+    int min = MIN_INDOVINA;
 
     int numero = rand_int(min, max);
 
-
-    game_cell *eventi = (game_cell *) calloc(9, sizeof(game_cell));
-
     char *riga = riga_indovina();
 
-    // inizializza le componenti della partita
-    nome_gioco(&eventi[0], INDOVINA);
-    layout_riga(&eventi[1], riga, 3);
-    layout_turni(&eventi[3], giocatori, numero_giocatori, 9);
-
-
-    area_gioco(6, eventi);
-
-
-    int turno = 0, tentativo, winner;
+    int winner, tentativo, turno = 0;
     bool vinto = false;
+
     while(!vinto) {
 
+        // stampa la partita
         printf("\n\n");
-        area_gioco(6, eventi);
+        area_gioco_indovina(numero_giocatori, giocatori, turno, riga, min, max);
 
-        printf("[%s]: ", print_player(*giocatori[turno]));
-        if(is_player(*giocatori[turno])) {
+        // prende il tentativo dall'utente o lo sceglie a caso
+        printf("[%s]: ", print_player(giocatori[turno]));
+        if(is_player(giocatori[turno])) {
             tentativo = get_int("", MIN_INDOVINA, MAX_INDOVINA);
             getchar();
         } else {
@@ -235,32 +234,29 @@ int indovina_il_numero(int numero_giocatori, Elenco **giocatori) {
             getchar();
         }
 
+        // controlla se ci ha preso
         if(tentativo == numero) {
             vinto = true;
             winner = turno;
 
         } else if(tentativo < numero) {
             min = tentativo;
+
+            riga[tentativo / 10] = 'B';
         } else {
             max = tentativo;
+
+            riga[tentativo / 10] = 'A';
         }
 
+
+        // aggiorna il turno
         if(turno < numero_giocatori - 1) {
             turno++;
         } else {
             turno = 0;
         }
-
-
-        aggiorna_riga(&eventi[1], tentativo, numero);
-        prossimo_turno(&eventi[5], giocatori, turno);
     }
-
-    free(eventi);
-
-
-    // STAMPA SCHERMATA DI VITTORIA
-
 
     return winner;
 }
@@ -268,6 +264,32 @@ int indovina_il_numero(int numero_giocatori, Elenco **giocatori) {
 
 
 
+
+
+
+
+
+
+
+
+void area_gioco_indovina(int numero_giocatori, Elenco *giocatori, int turno, char *riga, int min, int max) {
+
+    // inizio
+    printf("|");
+    for(int i = 0; i < LARGHEZZA; i++) {
+        printf("=");
+    }
+    printf("|\n");
+
+    // mezzo
+    stampa_riga(1, 2, "Stai giocando a\0", "INDOVINA IL NUMERO\0");        // occupa una riga
+    stampa_riga_vuota(2);       // occupa due righe
+    stampa_intervallo_indovina(riga, min, max);     // occupa due righe
+    stampa_riga_vuota(3);       // occupa tre righe
+    stampa_turno(numero_giocatori, giocatori, turno);       // occupa tre righe
+    stampa_riga_vuota(ALTEZZA - 11);     // arriva a fine pagina
+
+}
 
 
 
@@ -287,60 +309,7 @@ char *riga_indovina() {
 
 
 
-
-
-void layout_riga(game_cell *evento, char *riga, int pos) {
-
-    char **frasi_riga = (char **) calloc(3, sizeof(char *));
-    frasi_riga[0] = (char *) malloc(sizeof(char) * 4);
-    strcpy(frasi_riga[0], "[0]\0");
-    frasi_riga[1] = riga;
-    frasi_riga[2] = (char *) malloc(sizeof(char) * 6);
-    strcpy(frasi_riga[2], "[999]\0");
-
-    char **frasi_conteggio = (char **) calloc(5, sizeof(char *));
-
-    for(int i = 0; i < 5; i++) {
-        frasi_conteggio[i] = (char *) malloc(sizeof(char) * 10);
-    }
-
-    strcpy(frasi_conteggio[0], "[");
-    strcpy(frasi_conteggio[2], "] < X < [");
-    strcpy(frasi_conteggio[4], "]");
-
-    frasi_conteggio[1] = int_to_string(MIN_INDOVINA);
-    frasi_conteggio[3] = int_to_string(MAX_INDOVINA);
-
-    evento->y = pos;
-    evento->n = 3;
-    evento->x = SPAZIO_SINISTRA;
-    evento->content = frasi_riga;
-
-    (evento + 1)->y = pos + 1;
-    (evento + 1)->n = 5;
-    (evento + 1)->x = SPAZIO_SINISTRA;
-    (evento + 1)->content = frasi_conteggio;
-}
-
-
-
-
-
-
-
-void aggiorna_riga(game_cell *evento, int tentativo, int numero) {
-
-    if(tentativo < numero) {
-        evento->content[1][tentativo / 10] = 'B';
-
-        (evento + 1)->content[1] = int_to_string(tentativo);
-
-    } else if(tentativo > numero) {
-        evento->content[1][tentativo / 10] = 'A';
-
-        (evento + 1)->content[3] = int_to_string(tentativo);
-
-    } else {
-        evento->content[1][tentativo / 10] = 'X';
-    }
+void stampa_intervallo_indovina(char *riga, int min, int max) {
+    stampa_riga(0, 3, "[0]", riga, "[999]");
+    stampa_riga(0, 5, "[", int_to_string(min), "] < X < [", int_to_string(max), "]");
 }
