@@ -6,7 +6,7 @@
 int main() {
 
 
-    /*srand(time(NULL));
+    srand(time(NULL));
 
 
     ProfiloGiocatore prova_profili[3] = {
@@ -17,18 +17,16 @@ int main() {
 
     Elenco prova_giocatori[4] = {
             {0, &prova_profili[0], true},
-            {1, NULL, true},
-            {2, &prova_profili[1], true},
-            {3, &prova_profili[2], true}
+            {1, NULL, true}
     };
 
 
+    printf("\n\n\n%d", black_jack(prova_giocatori));
 
 
 
 
-
-    return 0;*/
+    return 0;
 
 
     // VARIABILI

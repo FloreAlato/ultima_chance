@@ -26,30 +26,14 @@ typedef struct {
 
 
 
-// blackjack
-typedef enum {cuori, quadri, fiori, picche}semi;
-
-typedef struct {
-    semi seme;
-    int valore;
-}carta;
-
-/*char card_img[5][11] = {
-        " _______ ",
-        "|      %s|",
-        "|   %s  |",
-        "|%s      |",
-        " ------- "
-};*/
-
-
 
 
 
 // code
-//void area_gioco(int, game_cell *);
+void layout();
 void stampa_riga(int, int, ...);
-void stampa_riga_array(int, int, Elenco *);
+void stampa_riga_elenco(int, int, Elenco *);
+void stampa_riga_stringhe(int, int, char**);
 void stampa_riga_vuota(int);
 
 

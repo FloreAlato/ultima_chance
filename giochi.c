@@ -42,7 +42,7 @@ void stampa_riga(int spazio, int args, ...) {
 }
 
 
-void stampa_riga_array(int spazio, int dim, Elenco *array) {
+void stampa_riga_elenco(int spazio, int dim, Elenco *array) {
 
     int space = 0;
 
@@ -57,7 +57,7 @@ void stampa_riga_array(int spazio, int dim, Elenco *array) {
         space += (int) strlen(print_player(array[i]));
 
         for(int j = 0; j < spazio; j++) {
-            printf(" ");\
+            printf(" ");
             space++;
         }
     }
@@ -66,6 +66,35 @@ void stampa_riga_array(int spazio, int dim, Elenco *array) {
     }
     printf("|\n");
 }
+
+
+
+void stampa_riga_stringhe(int spazio, int dim, char **stringhe) {
+
+    int space = 0;
+
+    printf("|");
+    for(int i = 0; i < SPAZIO_SINISTRA; i++) {
+        printf(" ");
+        space++;
+    }
+    for(int i = 0; i < dim; i++) {
+        printf("%s", stringhe[i]);
+
+        space += (int) strlen(stringhe[i]);
+
+        for(int j = 0; j < spazio; j++) {
+            printf(" ");
+            space++;
+        }
+    }
+    for(int i = 0; i < LARGHEZZA - space; i++) {
+        printf(" ");
+    }
+    printf("|\n");
+}
+
+
 
 
 
@@ -91,16 +120,17 @@ void stampa_turno(int numero_giocatori, Elenco *giocatori, int turno) {
     }
 
     stampa_riga(1, 1, "Tocca a:\0");       // occupa una riga
-    stampa_riga_array(4, numero_giocatori, giocatori);      // occupa una riga
+    stampa_riga_elenco(4, numero_giocatori, giocatori);      // occupa una riga
     stampa_riga(distanza, 2, "\0", "^\0");     // occupa una riga
 }
 
 
 
 
-void stampa_vincitore(Elenco vincitore) {
-
-    // stampa giocatore e domanda
-    // da scrivere
-
+void layout() {
+    printf("|");
+    for(int i = 0; i < LARGHEZZA; i++) {
+        printf("=");
+    }
+    printf("|\n");
 }
