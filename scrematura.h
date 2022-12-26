@@ -5,7 +5,7 @@
 #ifndef DAVIDE_FLORE_66174_SCREMATURA_H
 #define DAVIDE_FLORE_66174_SCREMATURA_H
 
-#include "finale.h"
+#include "svolgimento.h"
 
 
 #define MIN_INDOVINA 0

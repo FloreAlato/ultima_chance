@@ -258,6 +258,9 @@ int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
         }
     }
 
+    // stampa il vincitore
+
+
     return winner;
 }
 
@@ -282,7 +285,7 @@ void area_gioco_indovina(int numero_giocatori, Elenco *giocatori, int turno, cha
     printf("|\n");
 
     // mezzo
-    stampa_riga(1, 2, "Stai giocando a\0", "INDOVINA IL NUMERO\0");        // occupa una riga
+    stampa_riga(SPAZIO_SINISTRA, 1, 2, "Stai giocando a\0", "INDOVINA IL NUMERO\0");        // occupa una riga
     stampa_riga_vuota(2);       // occupa due righe
     stampa_intervallo_indovina(riga, min, max);     // occupa due righe
     stampa_riga_vuota(3);       // occupa tre righe
@@ -310,6 +313,6 @@ char *riga_indovina() {
 
 
 void stampa_intervallo_indovina(char *riga, int min, int max) {
-    stampa_riga(0, 3, "[0]", riga, "[999]");
-    stampa_riga(0, 5, "[", int_to_string(min), "] < X < [", int_to_string(max), "]");
+    stampa_riga(SPAZIO_SINISTRA, 0, 3, "[0]", riga, "[999]");
+    stampa_riga(SPAZIO_SINISTRA, 0, 5, "[", int_to_string(min), "] < X < [", int_to_string(max), "]");
 }

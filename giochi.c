@@ -8,7 +8,8 @@
 
 
 
-void stampa_riga(int spazio, int args, ...) {
+
+void stampa_riga(int sinistra, int spazio, int args, ...) {
 
     int space = 0;
     char *segnaposto;
@@ -17,7 +18,7 @@ void stampa_riga(int spazio, int args, ...) {
     va_start(lista, args);
 
     printf("|");
-    for(int i = 0; i < SPAZIO_SINISTRA; i++) {
+    for(int i = 0; i < sinistra; i++) {
         printf(" ");
         space++;
     }
@@ -26,9 +27,12 @@ void stampa_riga(int spazio, int args, ...) {
         segnaposto = va_arg(lista, char *);
 
         printf("%s", segnaposto);
-        for(int j = 0; j < spazio; j++) {
-            printf(" ");
-            space++;
+
+        if(i < args - 1) {
+            for(int j = 0; j < spazio; j++) {
+                printf(" ");
+                space++;
+            }
         }
 
         space += (int) strlen(segnaposto);
@@ -119,9 +123,9 @@ void stampa_turno(int numero_giocatori, Elenco *giocatori, int turno) {
         distanza += (int) strlen(print_player(giocatori[i])) + 4;
     }
 
-    stampa_riga(1, 1, "Tocca a:\0");       // occupa una riga
+    stampa_riga(SPAZIO_SINISTRA, 1, 1, "Tocca a:\0");       // occupa una riga
     stampa_riga_elenco(4, numero_giocatori, giocatori);      // occupa una riga
-    stampa_riga(distanza, 2, "\0", "^\0");     // occupa una riga
+    stampa_riga(SPAZIO_SINISTRA, distanza, 2, "\0", "^\0");     // occupa una riga
 }
 
 

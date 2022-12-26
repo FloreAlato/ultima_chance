@@ -17,12 +17,13 @@ int main() {
 
     Elenco prova_giocatori[4] = {
             {0, &prova_profili[0], true},
-            {1, NULL, true}
+            {1, NULL, true},
+            {2, &prova_profili[1], true},
+            {3, &prova_profili[2], true}
     };
 
 
-    printf("\n\n\n%d", black_jack(prova_giocatori));
-
+    printf("\n\nVince %s!!", print_player(prova_giocatori[ponte_di_vetro(prova_giocatori)]));
 
 
 
