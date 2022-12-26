@@ -241,3 +241,14 @@ int rand_int_between(int num1, int num2) {
         return num1;
     }
 }
+
+
+
+
+bool is_frontman(Elenco giocatore) {
+    if(is_player(giocatore) && strcmp(giocatore.p->nome, "Riccardo Scateni") == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}

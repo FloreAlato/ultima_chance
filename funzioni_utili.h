@@ -50,6 +50,8 @@ int si_no(char *);
 int rand_int(int, int);
 int rand_int_between(int, int);
 
+bool is_frontman(Elenco);
+
 
 
 #endif //DAVIDE_FLORE_66174_FUNZIONI_UTILI_H

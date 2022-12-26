@@ -81,11 +81,13 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
 
 
     int winner, dim;
+    bool found, fin;
 
     // gioca e riduci il numero
     for(int i = 0; i < target; i++) {
         if(pla[i]) {
             printf("\n\nIl %do gruppo gioca a INDOVINA IL NUMERO!!! (invio)", i);
+            getchar();
             getchar();
 
             if(gruppetti[i][dim_gruppetti].id == -1) {
@@ -94,22 +96,25 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
                 dim = dim_gruppetti + 1;
             }
 
+            /*printf("\n\n");
+            for(int a = 0; a < dim; a++) {
+                printf("%s ", print_player(gruppetti[i][a]));
+            }
+            printf("\n\n");*/
+
+
             // GIOCA A INDOVINA IL NUMERO CON IL GRUPPETTO DI DIMENSIONE DIM
             winner = indovina_il_numero(dim, gruppetti[i]);
-            //winner = 0;
-
-
-            //printf("\n\n\nIl frontman si trova nel %do gruppetto", pos_frontman);
 
 
             // FRONTMAN DELLO SPR1D GAME
             if(pos_frontman == i) {
 
                 // trova riccardo e lo fa vincere
-                bool found = false;
+                found = false;
 
                 for(int d = 0; d < dim && !found; d++) {
-                    if(is_player(gruppetti[i][d]) && strcmp(gruppetti[i][d].p->nome, "Riccardo Scateni") == 0) {
+                    if(is_frontman(gruppetti[i][d])) {
                         winner = d;
                         found = true;
                     }
@@ -118,10 +123,8 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
 
 
 
-
-
             // AGGIORNA I DATI GIOCATORE (rivedere)
-            for(int j = 0; j <= dim; j++) {
+            for(int j = 0; j < dim; j++) {
                 if(j == winner) {       // vincitore
                     if(is_player(gruppetti[i][j])) {
                         gruppetti[i][j].p->tot_giochi_giocati++;
@@ -142,6 +145,7 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
                 }
             }
 
+
         } else {
 
             if(gruppetti[i][dim_gruppetti].id == -1) {
@@ -151,7 +155,7 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
             }
             winner = rand_int(0, dim);
 
-            printf("\nIl %do gruppo ha giocato, e ha vinto %s!!", i, print_player(gruppetti[i][winner]));
+            //printf("\nIl %do gruppo ha giocato, e ha vinto %s!!", i, print_player(gruppetti[i][winner]));
 
             // uccide i giocatori perdenti
             for(int j = 0; j <= dim; j++) {
@@ -166,12 +170,22 @@ Elenco *scrematura(int numero_giocatori, int target, Elenco *giocatori, int nume
 
         risultato_scrematura[i] = gruppetti[i][winner];
 
+
+
+        // STAMPA IL VINCITORE E SALVA LA PARTITA
+        printf("\n\n");
+        layout();
+        stampa_riga_vuota(1);
+        stampa_riga(SPAZIO_SINISTRA, 1, 2, "Ha vinto", print_player(gruppetti[i][winner]));
+        stampa_riga_vuota(1);
+        layout();
+
         // CHIEDI DI SALVARE
-        printf("\n\nUna partita si e' conclusa, vuoi salvare la partita? (si / no)");
+        printf("vuoi salvare la partita? (si / no)");
         bool scelta = si_no("\nScelta: ");
 
         if(scelta) {
-            bool fin = save_short(numero_profili, profili);
+            fin = save_short(numero_profili, profili);
             if(fin) {
                 printf("\n\nAddio allora! (invio)");
                 getchar();
@@ -257,8 +271,6 @@ int indovina_il_numero(int numero_giocatori, Elenco *giocatori) {
             turno = 0;
         }
     }
-
-    // stampa il vincitore
 
 
     return winner;

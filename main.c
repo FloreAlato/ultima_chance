@@ -6,7 +6,7 @@
 int main() {
 
 
-    srand(time(NULL));
+    /*srand(time(NULL));
 
 
     ProfiloGiocatore prova_profili[3] = {
@@ -27,7 +27,7 @@ int main() {
 
 
 
-    return 0;
+    return 0;*/
 
 
     // VARIABILI

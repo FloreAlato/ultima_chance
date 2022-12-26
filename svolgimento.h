@@ -7,8 +7,14 @@
 
 #include "finale.h"
 
+#define NUMERO_GIOCHI_DA_DUE 1
+#define NUMERO_GIOCHI_DA_QUATTRO 2
 
-int svolgimento(int);
+
+typedef enum{MURRA, PONTE_DI_VETRO} giochi_vari;
+
+
+bool svolgimento(int, Elenco *, Elenco *, Elenco *);
 
 
 #endif //DAVIDE_FLORE_66174_SVOLGIMENTO_H
