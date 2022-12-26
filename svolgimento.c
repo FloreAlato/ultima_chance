@@ -7,6 +7,14 @@
 
 
 
+char nomi_giochi[NUMERO_GIOCHI_DA_QUATTRO][20] = {
+        "Pari o Dispari",
+        "Ponte di Vetro"
+};
+
+
+
+
 
 
 
@@ -31,11 +39,15 @@ bool svolgimento(int numero_giocatori, Elenco *giocatori, Elenco *originali, Ele
 
     bool pla = false;
     bool frontman = false;
+    int pos_frontman;
 
-    int id_gioco, winner;
+    int id_gioco, winner, min, max;
 
     // loop partita
     while(numero > 2) {
+
+        min = 0;
+        max = 0;
 
         pla = false;
         frontman = false;
@@ -45,10 +57,14 @@ bool svolgimento(int numero_giocatori, Elenco *giocatori, Elenco *originali, Ele
         if(r && numero > 4) {
             // GIOCO DA 4 GIOCATORI
             dim_gruppetto = 4;
+            min = NUMERO_GIOCHI_DA_DUE;
+            max = NUMERO_GIOCHI_DA_QUATTRO;
             numero -= 3;
         } else {
             // GIOCO DA 2 GIOCATORI
             dim_gruppetto = 2;
+            min = 0;
+            max = NUMERO_GIOCHI_DA_DUE;
             numero -=1;
         }
 
@@ -61,7 +77,8 @@ bool svolgimento(int numero_giocatori, Elenco *giocatori, Elenco *originali, Ele
             if(is_player(gruppetto[i])) {
                 pla = true;
 
-                if(strcmp(print_player(gruppetto[i]), "Riccardo Scateni") == 0) {
+                if(is_frontman(gruppetto[i])) {
+                    pos_frontman = i;
                     frontman = true;
                 }
             }
@@ -72,43 +89,52 @@ bool svolgimento(int numero_giocatori, Elenco *giocatori, Elenco *originali, Ele
 
 
         // SCEGLIE IL GIOCO
-        if(dim_gruppetto == 4) {
-            if(frontman) {
-                printf("\n\nA quale dei seguenti giochi vuoi giocare? (da %d a %d)", NUMERO_GIOCHI_DA_DUE, NUMERO_GIOCHI_DA_QUATTRO - 1);
+        if(frontman) {
 
-                // stampare i giochi disponibili
-
-                id_gioco = get_int(": ", NUMERO_GIOCHI_DA_DUE, NUMERO_GIOCHI_DA_QUATTRO - 1);
-            } else {
-                id_gioco = rand_int(NUMERO_GIOCHI_DA_DUE, NUMERO_GIOCHI_DA_QUATTRO - 1);
+            // fa scegliere a Riccardo Scateni il gioco da fare
+            printf("\n\nA quale dei seguenti giochi vuoi giocare?");
+            for(int i = min; i < max; i++) {
+                printf("[%d] -> %s", i, nomi_giochi[i]);
             }
+            printf("\n\nRiccardo Scateni");
+
+            id_gioco = get_int(": ", min, max - 1);
         } else {
-            if(frontman) {
-                printf("\n\nA quale dei seguenti giochi vuoi giocare? (da 0 a %d)", NUMERO_GIOCHI_DA_DUE - 1);
-
-                // stampare i giochi disponibili
-
-                id_gioco = get_int(": ", 0, NUMERO_GIOCHI_DA_DUE - 1);
-            } else {
-                id_gioco = rand_int(0, NUMERO_GIOCHI_DA_DUE - 1);
-            }
+            id_gioco = rand_int(min, max - 1);
         }
 
+
         // GIOCA LA PARTITA
-        switch(id_gioco) {
-            case PONTE_DI_VETRO:
-                // gioca a ponte di vetro
-                winner = ponte_di_vetro(gruppetto);
-                break;
-            default:
-                break;
+        if(pla) {
+
+            printf("\n\nSi gioca a %s!! (invio)", nomi_giochi[id_gioco]);
+            getchar();
+            printf("\n\n");
+
+            switch(id_gioco) {
+                case PARI_DISPARI:
+                    // rivedere
+                    winner = pari_o_dispari(gruppetto);
+                    break;
+                case DADI:
+                    winner = dadi(gruppetto);
+                    break;
+                case PONTE_DI_VETRO:
+                    // gioca a ponte di vetro
+                    winner = ponte_di_vetro(gruppetto);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            winner = rand_int(0, dim_gruppetto - 1);
         }
 
 
         // FRONTMAN
         if(frontman) {
             for(int i = 0; i < dim_gruppetto; i++) {
-                if(strcmp(print_player(gruppetto[i]), "Riccardo Scateni") == 0) {
+                if(is_frontman(gruppetto[i])) {
                     winner = i;
                 }
             }
@@ -116,10 +142,35 @@ bool svolgimento(int numero_giocatori, Elenco *giocatori, Elenco *originali, Ele
 
 
         // AGGGIORNA I DATI DEL VINCITORE
-        //
+        for(int i = 0; i < dim_gruppetto; i++) {
+            if(i == winner) {
+                if(is_player(gruppetto[i])) {
+                    gruppetto[i].p->tot_giochi_giocati++;
+                    gruppetto[i].p->tot_giochi_vinti++;
+
+                    originali[gruppetto[i].id].p->tot_giochi_giocati++;
+                    originali[gruppetto[i].id].p->tot_giochi_vinti++;
+                }
+            } else {
+                if(is_player(gruppetto[i])) {
+                    gruppetto[i].p->tot_giochi_giocati++;
+
+                    originali[gruppetto[i].id].p->tot_giochi_giocati++;
+                }
+                gruppetto[i].vivo = false;
+
+                originali[gruppetto[i].id].vivo = false;
+            }
+        }
 
 
-        // SALVA LA PARTITA
+        // STAMPA IL VINCITORE E SALVA LA PARTITA
+        layout();
+        stampa_riga_vuota(1);
+        stampa_riga(SPAZIO_SINISTRA, 1, 2, "Ha vinto", print_player(gruppetto[winner]));
+        stampa_riga_vuota(1);
+        layout();
+        printf("Vuoi salvare la partita? (si / no)");
 
     }
 

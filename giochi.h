@@ -11,11 +11,6 @@
 #define ALTEZZA 20
 #define SPAZIO_SINISTRA 2
 
-typedef enum {
-    INDOVINA,
-    PARI_DISPARI
-} giochi;
-
 
 typedef struct {
     int y;
@@ -45,7 +40,10 @@ void stampa_turno(int, Elenco *, int);
 
 // PARI O DISPARI
 int pari_o_dispari(Elenco *);
-void layout_pari(Elenco *, char *, char *, char *, bool);
+void layout_pari(Elenco *, char *, char *, char *, bool, int, int);
+
+// DADI
+int dadi(Elenco *);
 
 // PONETE DI VETRO
 int ponte_di_vetro(Elenco *);

@@ -7,11 +7,11 @@
 
 #include "finale.h"
 
-#define NUMERO_GIOCHI_DA_DUE 1
-#define NUMERO_GIOCHI_DA_QUATTRO 2
+#define NUMERO_GIOCHI_DA_DUE 2
+#define NUMERO_GIOCHI_DA_QUATTRO 3
 
 
-typedef enum{MURRA, PONTE_DI_VETRO} giochi_vari;
+typedef enum{PARI_DISPARI, DADI, PONTE_DI_VETRO} giochi_vari;
 
 
 bool svolgimento(int, Elenco *, Elenco *, Elenco *);

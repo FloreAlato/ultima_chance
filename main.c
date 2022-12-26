@@ -6,7 +6,7 @@
 int main() {
 
 
-    /*srand(time(NULL));
+    srand(time(NULL));
 
 
     ProfiloGiocatore prova_profili[3] = {
@@ -16,18 +16,18 @@ int main() {
     };
 
     Elenco prova_giocatori[4] = {
-            {0, &prova_profili[0], true},
+            //{0, &prova_profili[0], true},
             {1, NULL, true},
             {2, &prova_profili[1], true},
             {3, &prova_profili[2], true}
     };
 
 
-    printf("\n\nVince %s!!", print_player(prova_giocatori[ponte_di_vetro(prova_giocatori)]));
+    printf("\n\nVince %s!!", print_player(prova_giocatori[pari_o_dispari(prova_giocatori)]));
 
 
 
-    return 0;*/
+    return 0;
 
 
     // VARIABILI
@@ -229,14 +229,8 @@ int main() {
         for(int i = 0; i < numero_giocatori_vivi; i++) {
             printf("\n%s", print_player(giocatori_vivi[i]));
         }
-    }
-
-
-
-
-    printf("\n\n\n");
-    for(int i = 0; i < numero_giocatori; i++) {
-        printf("\n%s -> %d", print_player(giocatori[i]), giocatori[i].vivo);
+        getchar();
+        getchar();
     }
 
 
@@ -246,9 +240,16 @@ int main() {
     // SVOLGIMENTO (se non gia' avvenuto con successo)
 
     if(numero_giocatori_vivi > 2) {
+
+        // finalisti da decidere con lo svolgimento
+        Elenco finalisti[2];
         // svolgimento
         // sistema scalare per ridurre il numero
         // non dimenticare di far scegliere i giochi a Riccardo Scateni
+
+        svolgimento(numero_giocatori_vivi, giocatori_vivi, giocatori, &finalisti[0]);
+
+        printf("\n\n\n\nGli ultimi due rimasti sono %s e %s!!!!", print_player(finalisti[0]), print_player(finalisti[1]));
 
         // deve arrivare a 2
     }
