@@ -6,6 +6,9 @@
 #include "giochi.h"
 
 
+
+// GIOCO PARI O DISPARI
+
 int pari_o_dispari(Elenco *giocatori) {
 
     bool pla[2] = {false, false};
@@ -14,20 +17,30 @@ int pari_o_dispari(Elenco *giocatori) {
     int winner;
 
     // se il primo giocatore non e' utente, inizia il secondo
+
     if(!is_player(giocatori[(int)pla[0]])) {
         pla[0] = !pla[0];
     }
 
+    // ogni turno stampa l'area di gioco
+    // usando il bool turno per stampare prima il giocatore
+    // le operazioni eseguibili per ogni turno sono:
+
+
+    // scelgie se essere pari o dispari
     printf("\n\n");
     layout_pari(giocatori, "non assegnato...", "non assegnato...", "Vuoi essere pari o dispari? (pari / dispari)", pla[0], 0, 0);
     printf("%s: ", print_player(giocatori[(int)pla[0]]));
     pla[1] = (bool) choice_string("", 2, opzioni);
 
+    // sceglie quante dita buttare
     printf("\n\n");
     layout_pari(giocatori, opzioni[(int)pla[1]], opzioni[(int)!pla[1]], "Quante dita vuoi buttare? (da 0 a 5)", pla[0], 0, 0);
     printf("%s: ", print_player(giocatori[(int)pla[0]]));
     dita[0] = get_int("", 0, 5);
 
+    // fa scegliere al secondo giocatore quante dita buttare
+    // cambia se e' giocatore o meno
     printf("\n\n");
     layout_pari(giocatori, opzioni[(int)pla[1]], opzioni[(int)!pla[1]], "Quante dita vuoi buttare? (da 0 a 5)", pla[0], dita[0], 0);
     printf("%s: ", print_player(giocatori[(int)!pla[0]]));
@@ -42,11 +55,13 @@ int pari_o_dispari(Elenco *giocatori) {
         getchar();
     }
 
+    // stampa area di gioco con la somma
     printf("\n\n");
     layout_pari(giocatori, opzioni[(int)pla[1]], opzioni[(int)!pla[1]], "La partita si conclude", pla[0], dita[0], dita[1]);
     printf("La somma vale %d (invio)", dita[0] + dita[1]);
     getchar();
 
+    // controlla la somma e fa vincere che ci ha azzeccato
     if((dita[0] + dita[1]) % 2 == 0) {       // la somma e' pari
         if(!pla[1]) {
             winner = (int)pla[0];
@@ -68,6 +83,7 @@ int pari_o_dispari(Elenco *giocatori) {
 
 
 
+// layout di pari o dispari, per estetica
 
 void layout_pari(Elenco *giocatori, char *frase1, char *frase2, char *frase3, bool i, int dita1, int dita2) {
     layout();

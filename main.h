@@ -8,13 +8,19 @@
 
 #include "scrematura.h"
 
+// macro con il numero massimo di giocatori
+
 #define MAX_GIOCATORI 999
+
+// macro estetiche per rendere la switch nel main piu' estetica
 
 #define CONTINUA 0
 #define SALVA 1
 #define INIZIA 2
 #define ESCI 3
 
+
+// funzioni del main
 
 ProfiloGiocatore *crea_profili(int *, int *);
 ProfiloGiocatore *leggi_file(int *, bool *, FILE *);

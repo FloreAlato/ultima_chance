@@ -7,43 +7,46 @@
 
 #include "files.h"
 
+
+// macro per la stampa opridata dei giochi
+
 #define LARGHEZZA 110
 #define ALTEZZA 20
 #define SPAZIO_SINISTRA 2
 
 
-typedef struct {
-    int y;
-    int x;
-    int n;
-    char **content;
-} game_cell;
 
 
 
 
+// funzioni per la stampa dei giochi
 
-
-// code
 void layout();
 void stampa_riga(int, int, int, ...);
 void stampa_riga_elenco(int, int, Elenco *);
-void stampa_riga_stringhe(int, int, char**);
 void stampa_riga_vuota(int);
-
-
-
 void stampa_turno(int, Elenco *, int);
 
 
 
+// sezione giochi
+// tutte le funzioni inizializzate qui sono definite nei rispettivi files
 
-// PARI O DISPARI
+// PARI O DISPARI (finito)
 int pari_o_dispari(Elenco *);
 void layout_pari(Elenco *, char *, char *, char *, bool, int, int);
 
 // DADI
 int dadi(Elenco *);
+void layout_dadi(Elenco *, bool, int *, int *);
+
+// MORRA CINESE
+int morra_cinese(Elenco *);
+void layout_morra_cinese(Elenco *, bool, char *, char *);
+
+// MURRA
+int murra(Elenco *);
+void layout_murra(Elenco *, bool, int *, int *);
 
 // PONETE DI VETRO
 int ponte_di_vetro(Elenco *);

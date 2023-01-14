@@ -13,11 +13,14 @@
 #include <time.h>
 #include <stdarg.h>
 
+// macro varie
+
 #define DIM_NOME 64
 #define DIM_OPZIONE 10
 
 
-// code goes here
+// struttura profilo giocatore
+
 typedef struct {
     int id;
     char nome[DIM_NOME];
@@ -28,6 +31,7 @@ typedef struct {
     int tot_giochi_vinti;
 } ProfiloGiocatore;
 
+// struttura Elenco
 
 typedef struct {
     int id;
@@ -36,6 +40,7 @@ typedef struct {
 } Elenco;
 
 
+// letteralmente funzioni utili
 
 int choice_string(char *, int, char[][DIM_OPZIONE]);
 int get_int(char *, int, int);
@@ -45,11 +50,8 @@ bool is_numeric(char *);
 Elenco *componi_elenco(int);
 bool is_player(Elenco);
 char *print_player(Elenco);
-char *print_player_ind(Elenco *);
 int si_no(char *);
 int rand_int(int, int);
-int rand_int_between(int, int);
-
 bool is_frontman(Elenco);
 
 

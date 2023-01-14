@@ -8,17 +8,18 @@
 #include "svolgimento.h"
 
 
+// macro con il range per indovina il numero
+
 #define MIN_INDOVINA 0
 #define MAX_INDOVINA 999
 
-#define DIM_INIZIO 4
-#define  DIM_FINE 6
 
-
+// funzioni principali
 
 Elenco *scrematura(int, int, Elenco *, int, ProfiloGiocatore *, Elenco *);
 int indovina_il_numero(int, Elenco *);
 
+// funzioni estetiche
 
 void area_gioco_indovina(int, Elenco *, int, char *, int, int);
 void stampa_intervallo_indovina(char *, int, int);

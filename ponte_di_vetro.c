@@ -6,6 +6,8 @@
 #include "giochi.h"
 
 
+// casella del ponte, per la stampa
+
 char casella_ponte[5][11] = {
         " _______ \0",
         "|       |\0",
@@ -18,10 +20,12 @@ char casella_ponte[5][11] = {
 
 
 
+// GIOCO PONTE DI VETRO
 
 int ponte_di_vetro(Elenco *giocatori) {
 
     // array delle 3 risposte corrette
+
     bool giusti[3];
     giusti[0] = (bool) rand_int(0, 1);
     giusti[1] = (bool) rand_int(0, 1);
@@ -29,6 +33,9 @@ int ponte_di_vetro(Elenco *giocatori) {
 
 
     // genera e riempie il ponte
+    // e' fondamentalmente una gigantesca matrice
+    // 3 coppie di casella_ponte
+
     char ****ponte = (char ****) calloc(3, sizeof(char ***));
     for(int i = 0; i < 3; i++) {
         ponte[i] = (char ***) calloc(2, sizeof(char **));
@@ -44,17 +51,22 @@ int ponte_di_vetro(Elenco *giocatori) {
         }
     }
 
+    // inizializzo un po' di funzioni utili
 
-    bool finito = false;
     int turno = 0, caselle = 2, numero_giocatori_vivi = 4, scelta, winner;
     char opzioni[2][10] = {"sinistra", "destra"};
 
+    // stampa il layout del gioco
 
     layout_ponte(giocatori, ponte, turno);
 
 
+    // il gioco va avanti finche' ci sono giocatori vivi o finche' il ponte non finisce
 
     while(caselle >= 0 && numero_giocatori_vivi > 0) {
+
+        // se e' utente, cheiede se andare a sinistra o a destra
+        // altrimenti lo sceglie a caso
 
         printf("\nQuale casella vuoi tentare? (destra / sinistra)\n%s", print_player(giocatori[turno]));
         if(is_player(giocatori[turno])) {
@@ -65,6 +77,11 @@ int ponte_di_vetro(Elenco *giocatori) {
             printf(": %s", opzioni[scelta]);
             getchar();
         }
+
+        // controlla se la casella scelta e' giusta o sbagliata
+        // il ponte avanza in modo discendente
+        // volevo che i giocatori scendessero anziche' salire
+        // e' piu' bello da vedere
 
         if(giusti[caselle] == scelta) {         // casella giusta
 
@@ -95,6 +112,7 @@ int ponte_di_vetro(Elenco *giocatori) {
     winner = turno;
 
 
+    // libera la memoria dinamica
     free(ponte);
 
     return winner;
@@ -108,6 +126,7 @@ int ponte_di_vetro(Elenco *giocatori) {
 
 
 
+// funzioni grafiche per far vedere quando una casella del ponte si rompe o va bene
 
 void casella_sbagliata(char **casella) {
     casella[1][1] = casella[1][7] = casella[2][4] = casella[3][1] = casella[3][7] = 'X';
@@ -117,6 +136,10 @@ void casella_giusta(char **casella) {
     casella[1][7] = casella[2][2] = casella[2][6] = casella[3][4] = 'V';
 }
 
+
+
+// stampa il ponte in modo ordinato
+
 void stampa_ponte(char ****ponte) {
 
     for(int j = 2; j >= 0; j--) {
@@ -125,6 +148,9 @@ void stampa_ponte(char ****ponte) {
         }
     }
 }
+
+
+// layout completo del gioco
 
 void layout_ponte(Elenco *giocatori, char ****ponte, int turno) {
 

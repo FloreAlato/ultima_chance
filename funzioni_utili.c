@@ -7,6 +7,9 @@
 
 
 
+
+// prende in input una stringa fra quelle disponibili e restituisce un intero
+
 int choice_string(char *query, int num, char options[num][DIM_OPZIONE]) {
     int i;
     char risposta[20];
@@ -31,7 +34,7 @@ int choice_string(char *query, int num, char options[num][DIM_OPZIONE]) {
 
 
 
-
+// prende in input un intero compreso in un range
 
 int get_int(char *query, int min, int max) {
 
@@ -73,6 +76,8 @@ int get_int(char *query, int min, int max) {
 
 
 
+// converte una stringa numeroica in un intero
+
 int string_to_int(char *str) {
 
     int k, p, total = 0;
@@ -90,6 +95,7 @@ int string_to_int(char *str) {
 
 
 
+// converte un intero in una stringa numerica
 
 char *int_to_string(int numero) {
 
@@ -110,6 +116,7 @@ char *int_to_string(int numero) {
 
 
 
+// ritorna vero se la stringa fornita contiene solo numeri
 
 bool is_numeric(char *num) {
 
@@ -126,6 +133,7 @@ bool is_numeric(char *num) {
 
 
 
+// compone un Elenco data la sua dimensione
 
 Elenco *componi_elenco(int dim) {
 
@@ -147,6 +155,9 @@ Elenco *componi_elenco(int dim) {
 }
 
 
+
+// ritorna vero se il giocatore inserito e' associato a un profilo utente
+
 bool is_player(Elenco player) {
     if(player.p == NULL) {
         return false;
@@ -156,6 +167,8 @@ bool is_player(Elenco player) {
 }
 
 
+
+// ritorna il nome del giocatore inserito
 
 char *print_player(Elenco player) {
 
@@ -168,52 +181,12 @@ char *print_player(Elenco player) {
         strcpy(ret, "Giocatore \0");
         ret = strcat(ret, int_to_string(player.id));
 
-        /*if(player.id >= 0) {
-            // altrimenti converte l'id in stringa e ci mette "Giocatore " davanti
-            int powers[3] = {100, 10, 1};
-            int num = player.id;
-            strcpy(ret, "Giocatore \0");
-            for(int i = 0; i < 3; i++) {
-                ret[i + 10] = (char)((num / powers[i]) + 48);
-                //printf("%d", num / powers[i]);
-                num %= powers[i];
-            }
-            ret[14] = '\0';
-        }*/
-
-        return ret;
-    }
-}
-
-char *print_player_ind(Elenco *player) {
-    char *ret = calloc(14, sizeof(char));
-
-    // se ha un profilo, restituisce il nome
-    if(is_player(*player)) {
-        return player->p->nome;
-    } else {
-        strcpy(ret, "Giocatore \0");
-        ret = strcat(ret, int_to_string(player->id));
-
-        /*if(player.id >= 0) {
-            // altrimenti converte l'id in stringa e ci mette "Giocatore " davanti
-            int powers[3] = {100, 10, 1};
-            int num = player.id;
-            strcpy(ret, "Giocatore \0");
-            for(int i = 0; i < 3; i++) {
-                ret[i + 10] = (char)((num / powers[i]) + 48);
-                //printf("%d", num / powers[i]);
-                num %= powers[i];
-            }
-            ret[14] = '\0';
-        }*/
-
         return ret;
     }
 }
 
 
-
+// caso particolare di choice_string(), le opzioni sono solo si o no
 
 int si_no(char *query) {
 
@@ -223,27 +196,16 @@ int si_no(char *query) {
 }
 
 
+
+// restituisce un intero casuale in un range
+
 int rand_int(int min, int max) {
     return (rand() % (max - min + 1)) + min;
 }
 
 
 
-
-int rand_int_between(int num1, int num2) {
-
-    // prende un numero a caso fra i due e ritorna l'estremo più vicino
-    int mid = rand_int(0, 10);
-
-    if(mid > 5) {
-        return num2;
-    } else {
-        return num1;
-    }
-}
-
-
-
+// ritorna vero se il giocatore fornito e' un utente di nome Riccardo Scateni
 
 bool is_frontman(Elenco giocatore) {
     if(is_player(giocatore) && strcmp(giocatore.p->nome, "Riccardo Scateni") == 0) {

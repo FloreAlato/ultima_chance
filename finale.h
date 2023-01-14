@@ -8,17 +8,23 @@
 
 #include "giochi.h"
 
+// macro con il numero di carte che il programma puo' stampare affiancate
+
 #define STEP 4
 
+// enum con i segni per il gioco blackjack
 
-typedef enum {cuori, quadri, fiori, picche}semi;
+typedef enum {cuori, quadri, fiori, picche} semi;
 
+// struttura carta per il gioco bkackjack
 
 typedef struct {
     semi seme;
     int valore;
 }carta;
 
+
+// funzioni del finale
 
 int black_jack(Elenco *);
 void area_gioco_black(Elenco *, int *, carta **, int *);
